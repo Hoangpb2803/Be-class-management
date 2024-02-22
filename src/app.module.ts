@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './components/auth/auth.module';
 import { MajorModule } from './components/major/major.module';
+import { StudentModule } from './components/student/student.module';
+import { TeacherModule } from './components/teacher/teacher.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { MajorModule } from './components/major/major.module';
     }),
     AuthModule,
     MajorModule,
+    StudentModule,
+    TeacherModule,
   ],
   controllers: [AppController],
   providers: [AppService],

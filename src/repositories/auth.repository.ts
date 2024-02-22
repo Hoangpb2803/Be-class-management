@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { RegisterDto } from "src/dtos/register.dto";
 import { I_User } from "src/interfaces/user.interface";
 import * as bcrypt from 'bcrypt'
 
@@ -34,17 +33,6 @@ export class AuthRepository {
         }
     }
 
-    async createNewUser(data: RegisterDto): Promise<I_User> {
-        try {
-            const hashPassword = await this.hashPassword(data.password)
-            const newUser = await this.userModel.create({ ...data, password: hashPassword })
-            return newUser
-        } catch (error) {
-            console.error("getting error when add new user!!!", error);
-            throw error
-        }
-    }
-
     async compareUserInfo(password: string, hashPassword: string): Promise<boolean> {
         try {
             const checkPassword = await bcrypt.compare(password, hashPassword)
@@ -54,9 +42,4 @@ export class AuthRepository {
             throw error
         }
     }
-
-    async checkUser(_id: string) {
-        return this.userModel.findById(_id).exec()
-    }
-
 }

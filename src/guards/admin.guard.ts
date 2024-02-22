@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus } from "@nestjs/common";
 import { Observable } from "rxjs";
-import { E_Role } from "src/constants/role.enum";
+import { E_Role } from "src/constants/enum";
 
 export class AdminGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {

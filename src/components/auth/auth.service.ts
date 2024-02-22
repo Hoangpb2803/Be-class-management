@@ -1,8 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { E_Message } from 'src/constants/message.enum';
-import { ResponseData } from 'src/constants/response-data';
 import { LoginDto } from 'src/dtos/login.dto';
-import { RegisterDto } from 'src/dtos/register.dto';
 import { I_User } from 'src/interfaces/user.interface';
 import { AuthRepository } from 'src/repositories/auth.repository';
 import * as jwt from 'jsonwebtoken';
@@ -24,15 +21,6 @@ export class AuthService {
         }
         const tokens = this.generateAccessToken(user)
         return { ...tokens }
-    }
-
-    async register(data: RegisterDto): Promise<ResponseData<I_User>> {
-        const checkExist = await this.authRepo.emailExists(data.email)
-        if (checkExist) {
-            throw new HttpException("This email already exist!!! ", HttpStatus.CONFLICT)
-        }
-        const new_user = await this.authRepo.createNewUser(data)
-        return new ResponseData(HttpStatus.CREATED, E_Message.REGISTER, new_user)
     }
 
     private generateAccessToken(payload: I_User) {

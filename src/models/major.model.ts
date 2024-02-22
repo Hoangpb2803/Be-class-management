@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { I_Major } from "src/interfaces/major.interface";
 
 export const Major_Schema = new Schema<I_Major>({
-    name: String
+    name: { type: String, required: true }
 }, {
     timestamps: true,
     collection: 'Major'
