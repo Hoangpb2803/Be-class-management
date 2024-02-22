@@ -1,21 +1,19 @@
-import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
-import { NextFunction, Request, Response } from "express";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import * as jwt from 'jsonwebtoken'
+import { Observable } from "rxjs";
 
 @Injectable()
-export class JwtMiddleware implements NestMiddleware {
-    constructor() { }
-
-    use(req: Request, res: Response, next: NextFunction) {
-        const authHeader = req.headers.authorization
+export class AuthGuard implements CanActivate {
+    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+        const request = context.switchToHttp().getRequest();
+        const authHeader = request.headers.authorization
 
         if (authHeader && authHeader.split(" ")[0] === "Bearer") {
             const token = authHeader.split(" ")[1]
-
             try {
                 const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY)
-                req['user'] = decoded
-                next()
+                request['user'] = decoded
+                return true
             } catch (error) {
                 throw new UnauthorizedException('Invalid or expired token')
             }
