@@ -1,4 +1,5 @@
 import { IsIn, IsNotEmpty, IsString } from "class-validator"
+import { E_Role } from "src/constants/role.enum"
 import { IsFptEmail } from "src/decorators/validation.decorator"
 
 export class RegisterDto {
@@ -17,6 +18,6 @@ export class RegisterDto {
 
     @IsNotEmpty()
     @IsString()
-    @IsIn(['student', 'teacher', 'admin'], { message: "just accept 'student', 'teacher' or 'admin' role!" })
+    @IsIn([E_Role.STUDENT, E_Role.TEACHER, E_Role.ADMIN], { message: "just accept 'student', 'teacher' or 'admin' role!" })
     readonly role: string
 }

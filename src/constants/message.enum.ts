@@ -1,8 +1,8 @@
 export enum E_Message {
-    REGISTER = "creating new account successfully!",
-    CREATE_SUCCESS = "create successfully",
-    UPDATE_SUCCESS = "update successfully",
-    DELETE_SUCCESS = "delete successfully",
-    EXIST = 'this object is existing',
-    DONOT_EXIST = 'this object is not existing'
+    REGISTER = "Creating new account successfully!",
+    CREATE_SUCCESS = "Creating successfully!",
+    UPDATE_SUCCESS = "Updating successfully!",
+    DELETE_SUCCESS = "Deleting successfully!",
+    EXIST = 'This object is existing!',
+    DONOT_EXIST = 'This object is not existing!'
 }

@@ -18,8 +18,8 @@ export class AuthService {
         if (!user) {
             throw new HttpException("This email dosen't exist!!! ", HttpStatus.NOT_FOUND)
         }
-        const is_equal = await this.authRepo.compareUserInfo(data.password, user.password)
-        if (!is_equal) {
+        const isEqual = await this.authRepo.compareUserInfo(data.password, user.password)
+        if (!isEqual) {
             throw new HttpException("Your login information is wrong!!! ", HttpStatus.UNAUTHORIZED)
         }
         const tokens = this.generateAccessToken(user)
@@ -27,8 +27,8 @@ export class AuthService {
     }
 
     async register(data: RegisterDto): Promise<ResponseData<I_User>> {
-        const check_exist = await this.authRepo.emailExists(data.email)
-        if (check_exist) {
+        const checkExist = await this.authRepo.emailExists(data.email)
+        if (checkExist) {
             throw new HttpException("This email already exist!!! ", HttpStatus.CONFLICT)
         }
         const new_user = await this.authRepo.createNewUser(data)
@@ -45,12 +45,12 @@ export class AuthService {
 
     async generateNewToken(refreshToken: string) {
         try {
-            const check_verify = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY)
-            if (check_verify) {
+            const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY)
+            if (decoded) {
                 const payload = {
-                    _id: (check_verify as jwt.JwtPayload)._id,
-                    name: (check_verify as jwt.JwtPayload).name,
-                    role: (check_verify as jwt.JwtPayload).role
+                    _id: (decoded as jwt.JwtPayload)._id,
+                    name: (decoded as jwt.JwtPayload).name,
+                    role: (decoded as jwt.JwtPayload).role
                 }
                 const access_token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET_KEY, { expiresIn: '1m' })
                 return { access_token }
