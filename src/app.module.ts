@@ -6,6 +6,8 @@ import { AuthModule } from './components/auth/auth.module';
 import { MajorModule } from './components/major/major.module';
 import { StudentModule } from './components/student/student.module';
 import { TeacherModule } from './components/teacher/teacher.module';
+import { ClassModule } from './components/class/class.module';
+import { CourseModule } from './components/course/course.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { TeacherModule } from './components/teacher/teacher.module';
     MajorModule,
     StudentModule,
     TeacherModule,
+    ClassModule,
+    CourseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

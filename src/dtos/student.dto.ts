@@ -7,4 +7,6 @@ export class StudentDto extends UserDto {
     @IsNumber()
     @IsIn([1, 2, 3, 4], { message: "just accept level 1, 2, 3 or 4" })
     level: Level
+
+
 }

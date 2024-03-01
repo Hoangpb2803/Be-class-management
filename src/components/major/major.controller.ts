@@ -1,12 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { MajorService } from './major.service';
 import { ResponseData } from 'src/constants/response-data';
 import { I_Major } from 'src/interfaces/major.interface';
 import { MajorDto } from 'src/dtos/major.dto';
-import { AuthGuard } from 'src/guards/verify_token.guard';
-import { AdminGuard } from 'src/guards/admin.guard';
+// import { AuthGuard } from 'src/guards/verify_token.guard';
+// import { AdminGuard } from 'src/guards/admin.guard';
 
-@UseGuards(AuthGuard, AdminGuard)
+// @UseGuards(AuthGuard, AdminGuard)
 @Controller('major')
 export class MajorController {
 

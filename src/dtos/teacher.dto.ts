@@ -1,8 +1,8 @@
-import { IsEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber } from "class-validator";
 import { UserDto } from "./user.dto";
 
 export class teacherDto extends UserDto {
-    @IsEmpty()
+    @IsNotEmpty()
     @IsNumber()
     exp: number
 }

@@ -3,7 +3,7 @@ import { Role } from "src/constants/type";
 
 export interface I_User extends Document {
     name: string,
-    age: number,
+    dateOfBirth: Date,
     major: Types.ObjectId,
     email: string,
     password: string,

@@ -21,18 +21,6 @@ export class AuthRepository {
         }
     }
 
-    async hashPassword(pw: string): Promise<string> {
-        try {
-            const saltRounds = 10
-            const salt = await bcrypt.genSalt(saltRounds)
-            const hash = await bcrypt.hash(pw, salt)
-            return hash
-        } catch (error) {
-            console.error("getting error when hash password!!!", error)
-            throw error;
-        }
-    }
-
     async compareUserInfo(password: string, hashPassword: string): Promise<boolean> {
         try {
             const checkPassword = await bcrypt.compare(password, hashPassword)

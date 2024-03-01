@@ -45,13 +45,15 @@ export class StudentService {
 
     async createNewStudent(data: StudentDto): Promise<ResponseData<I_Student>> {
         const { level, ...user } = data
+        const role = "student"
 
         const checkExist = await this.checkStudentExist(data.email)
         if (checkExist.exist)
             throw checkExist.notice
         try {
-            const newStudent = await this.studentModel.create(data)
-            const newUser = await this.userRepo.createNewUser(user, newStudent._id)
+            const hashPassword = await this.userRepo.hashPassword("123456")
+            const newStudent = await this.studentModel.create({ ...data, password: hashPassword, role })
+            const newUser = await this.userRepo.createNewUser(newStudent._id, hashPassword, role, user)
             if (newStudent && newUser)
                 return new ResponseData(HttpStatus.OK, E_Message.CREATE_SUCCESS, newStudent)
         } catch (error) {

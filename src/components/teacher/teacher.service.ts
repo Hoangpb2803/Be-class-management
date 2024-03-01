@@ -45,15 +45,17 @@ export class TeacherService {
 
     async createNewStudent(data: teacherDto): Promise<ResponseData<I_Teacher>> {
         const { exp, ...user } = data
+        const role = "teacher"
 
         const checkExist = await this.checkStudentExist(data.email)
         if (checkExist.exist)
             throw checkExist.notice
         try {
-            const newStudent = await this.teacherModel.create(data)
-            const newUser = await this.userRepo.createNewUser(user, newStudent._id)
-            if (newStudent && newUser)
-                return new ResponseData(HttpStatus.OK, E_Message.CREATE_SUCCESS, newStudent)
+            const hashPassword = await this.userRepo.hashPassword("123456")
+            const newTeacher = await this.teacherModel.create({ ...data, password: hashPassword, role })
+            const newUser = await this.userRepo.createNewUser(newTeacher._id, hashPassword, role, user)
+            if (newTeacher && newUser)
+                return new ResponseData(HttpStatus.OK, E_Message.CREATE_SUCCESS, newTeacher)
         } catch (error) {
             throw new HttpException("cannot create student", HttpStatus.INTERNAL_SERVER_ERROR)
         }
