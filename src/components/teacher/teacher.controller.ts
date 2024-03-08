@@ -14,26 +14,26 @@ export class TeacherController {
 
     @Get()
     async getAllStudents(): Promise<ResponseData<I_Teacher>> {
-        return this.teacherService.getAllStudents()
+        return this.teacherService.getAllTeachers()
     }
 
     @Get(":id")
     async getStudentDetail(@Param('id') _id: string): Promise<ResponseData<I_Teacher>> {
-        return this.teacherService.getStudentDetail(_id)
+        return this.teacherService.getTeacherDetail(_id)
     }
 
     @Post()
     async createNewStudent(@Body() data: teacherDto): Promise<ResponseData<I_Teacher>> {
-        return this.teacherService.createNewStudent(data)
+        return this.teacherService.createNewTeacher(data)
     }
 
     @Put(":id")
     async updateStudentInfo(@Param('id') _id: string, @Body() data: teacherDto): Promise<ResponseData<I_Teacher>> {
-        return this.teacherService.updateStudentInfo(_id, data)
+        return this.teacherService.updateTeacherInfo(_id, data)
     }
 
     @Delete(":id")
     async deleteStudent(@Param('id') _id: string): Promise<ResponseData<I_Teacher>> {
-        return this.teacherService.deleteStudent(_id)
+        return this.teacherService.deleteTeacher(_id)
     }
 }

@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Teacher_Schema } from 'src/models/teacher.model';
 import { User_Schema } from 'src/models/user.model';
 import { UserRepository } from 'src/repositories/user.repository';
+import { TeacherRepository } from 'src/repositories/teacher.repository';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { UserRepository } from 'src/repositories/user.repository';
     ])
   ],
   controllers: [TeacherController],
-  providers: [TeacherService, UserRepository]
+  providers: [TeacherService, UserRepository, TeacherRepository]
 })
 export class TeacherModule { }

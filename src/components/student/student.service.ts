@@ -6,7 +6,9 @@ import { E_Message } from 'src/constants/message.enum';
 import { ResponseData } from 'src/constants/response-data';
 import { StudentDto } from 'src/dtos/student.dto';
 import { I_Student } from 'src/interfaces/student.interface';
+import { I_User } from 'src/interfaces/user.interface';
 import { BaseRepository } from 'src/repositories/base.repository';
+import { StudentRepository } from 'src/repositories/student.repository';
 import { UserRepository } from 'src/repositories/user.repository';
 
 @Injectable()
@@ -14,14 +16,18 @@ export class StudentService {
     constructor(
         @InjectModel('Student')
         private readonly studentModel: Model<I_Student>,
-        private readonly userRepo: UserRepository
+        @InjectModel('User')
+        private readonly userModel: Model<I_User>,
+        private readonly userRepo: UserRepository,
+        private readonly studentRepo: StudentRepository
     ) { }
 
     private readonly baseRepo = new BaseRepository<I_Student>(this.studentModel)
     private readonly object = "student"
 
     async getAllStudents(): Promise<ResponseData<I_Student>> {
-        return await this.baseRepo.findAll(this.object)
+        return await this.studentRepo.getAll()
+        // return await this.baseRepo.findAll(this.object)
     }
 
     async getStudentDetail(_id: string): Promise<ResponseData<I_Student>> {
@@ -30,7 +36,7 @@ export class StudentService {
 
     async checkStudentExist(email: string): Promise<{ exist: boolean, notice?: HttpException }> {
         try {
-            const checkExist = await this.studentModel.findOne({ email })
+            const checkExist = await this.userModel.findOne({ email })
             if (checkExist) {
                 return {
                     exist: true,

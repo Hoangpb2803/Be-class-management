@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { StudentDto } from 'src/dtos/student.dto';
 import { StudentService } from './student.service';
 import { ResponseData } from 'src/constants/response-data';
 import { I_Student } from 'src/interfaces/student.interface';
+import { TestGuard } from 'src/guards/test.guard';
 
 @Controller('student')
 export class StudentController {
@@ -20,6 +21,7 @@ export class StudentController {
         return this.studentService.getStudentDetail(_id)
     }
 
+    @UseGuards(TestGuard)
     @Post()
     async createNewStudent(@Body() data: StudentDto): Promise<ResponseData<I_Student>> {
         return this.studentService.createNewStudent(data)

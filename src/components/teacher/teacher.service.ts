@@ -6,7 +6,9 @@ import { E_Message } from 'src/constants/message.enum';
 import { ResponseData } from 'src/constants/response-data';
 import { teacherDto } from 'src/dtos/teacher.dto';
 import { I_Teacher } from 'src/interfaces/teacher.interface';
+import { I_User } from 'src/interfaces/user.interface';
 import { BaseRepository } from 'src/repositories/base.repository';
+import { TeacherRepository } from 'src/repositories/teacher.repository';
 import { UserRepository } from 'src/repositories/user.repository';
 
 @Injectable()
@@ -14,23 +16,26 @@ export class TeacherService {
     constructor(
         @InjectModel('Teacher')
         private readonly teacherModel: Model<I_Teacher>,
-        private readonly userRepo: UserRepository
+        @InjectModel('User')
+        private readonly userModel: Model<I_User>,
+        private readonly userRepo: UserRepository,
+        private readonly teacherRepo: TeacherRepository
     ) { }
 
     private readonly baseRepo = new BaseRepository<I_Teacher>(this.teacherModel)
     private readonly object = "student"
 
-    async getAllStudents(): Promise<ResponseData<I_Teacher>> {
-        return await this.baseRepo.findAll(this.object)
+    async getAllTeachers(): Promise<ResponseData<I_Teacher>> {
+        return await this.teacherRepo.getAll()
     }
 
-    async getStudentDetail(_id: string): Promise<ResponseData<I_Teacher>> {
+    async getTeacherDetail(_id: string): Promise<ResponseData<I_Teacher>> {
         return await this.baseRepo.findOne(_id)
     }
 
-    async checkStudentExist(email: string): Promise<{ exist: boolean, notice?: HttpException }> {
+    async checkTeacherExist(email: string): Promise<{ exist: boolean, notice?: HttpException }> {
         try {
-            const checkExist = await this.teacherModel.findOne({ email })
+            const checkExist = await this.userModel.findOne({ email })
             if (checkExist) {
                 return {
                     exist: true,
@@ -43,11 +48,11 @@ export class TeacherService {
         }
     }
 
-    async createNewStudent(data: teacherDto): Promise<ResponseData<I_Teacher>> {
+    async createNewTeacher(data: teacherDto): Promise<ResponseData<I_Teacher>> {
         const { exp, ...user } = data
         const role = "teacher"
 
-        const checkExist = await this.checkStudentExist(data.email)
+        const checkExist = await this.checkTeacherExist(data.email)
         if (checkExist.exist)
             throw checkExist.notice
         try {
@@ -57,28 +62,28 @@ export class TeacherService {
             if (newTeacher && newUser)
                 return new ResponseData(HttpStatus.OK, E_Message.CREATE_SUCCESS, newTeacher)
         } catch (error) {
-            throw new HttpException("cannot create student", HttpStatus.INTERNAL_SERVER_ERROR)
+            throw new HttpException("cannot create Teacher", HttpStatus.INTERNAL_SERVER_ERROR)
         }
 
     }
 
-    async updateStudentInfo(_id: string, data: teacherDto): Promise<ResponseData<I_Teacher>> {
+    async updateTeacherInfo(_id: string, data: teacherDto): Promise<ResponseData<I_Teacher>> {
         const { exp, ...user } = data
         const checkExist = this.baseRepo.findOne(_id)
         if (checkExist) {
             try {
-                const updateStudent = await this.teacherModel.findByIdAndUpdate(_id, data, { new: true })
+                const updateTeacher = await this.teacherModel.findByIdAndUpdate(_id, data, { new: true })
                 const newUser = await this.userRepo.updateNewUser(user, _id)
-                if (updateStudent && newUser) {
-                    return new ResponseData(HttpStatus.OK, E_Message.UPDATE_SUCCESS, updateStudent)
+                if (updateTeacher && newUser) {
+                    return new ResponseData(HttpStatus.OK, E_Message.UPDATE_SUCCESS, updateTeacher)
                 }
             } catch (error) {
-                throw new HttpException("Cannot update student!", HttpStatus.INTERNAL_SERVER_ERROR)
+                throw new HttpException("Cannot update Teacher!", HttpStatus.INTERNAL_SERVER_ERROR)
             }
         }
     }
 
-    async deleteStudent(_id: string): Promise<ResponseData<I_Teacher>> {
+    async deleteTeacher(_id: string): Promise<ResponseData<I_Teacher>> {
         return await this.baseRepo.delete(_id, this.object)
     }
 }

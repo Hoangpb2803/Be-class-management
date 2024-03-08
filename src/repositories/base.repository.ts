@@ -62,7 +62,7 @@ export class BaseRepository<T extends Document> {
             try {
                 const deleteObject = await this.model.findByIdAndDelete(_id)
                 if (deleteObject)
-                    return new ResponseData(HttpStatus.OK, E_Message.DELETE_SUCCESS, deleteObject)
+                    return new ResponseData(HttpStatus.OK, E_Message.DELETE_SUCCESS)
                 throw new HttpException(`Cannot delete ${object}!`, HttpStatus.INTERNAL_SERVER_ERROR)
             } catch (error) {
                 throw new HttpException(`Cannot delete ${object}!`, HttpStatus.INTERNAL_SERVER_ERROR)

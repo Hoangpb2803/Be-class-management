@@ -1,2 +1,2 @@
 export type Role = 'teacher' | 'student' | 'admin'
-export type Level = 1 | 2 | 3 | 4
+export type Level = "First Year" | "Second Year" | "Third Year" | "Final Year"

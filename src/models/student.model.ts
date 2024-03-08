@@ -4,7 +4,7 @@ import { User_Schema } from "./user.model";
 
 export const Student_Schema = new Schema<I_Student>({
     ...User_Schema.obj,
-    level: { type: Number, enum: [1, 2, 3, 4], required: true },
+    level: { type: String, enum: ["First Year", "Second Year", "Third Year", "Final Year"], required: true },
 }, {
     timestamps: true,
     collection: "Student"
