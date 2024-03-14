@@ -1,5 +1,5 @@
 
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ResponseData } from 'src/constants/response-data';
 import { TeacherService } from './teacher.service';
 import { I_Teacher } from 'src/interfaces/teacher.interface';
@@ -13,8 +13,16 @@ export class TeacherController {
     ) { }
 
     @Get()
-    async getAllStudents(): Promise<ResponseData<I_Teacher>> {
+    async getAllStudents(): Promise<ResponseData<number>> {
         return this.teacherService.getAllTeachers()
+    }
+
+    @Get("pagination")
+    async getStudentsPagination(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 1
+    ): Promise<ResponseData<I_Teacher>> {
+        return this.teacherService.getPagination(page, limit)
     }
 
     @Get(":id")

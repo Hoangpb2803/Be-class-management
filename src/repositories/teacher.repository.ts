@@ -11,7 +11,19 @@ export class TeacherRepository {
         private readonly teacherModel: Model<I_Teacher>
     ) { }
 
-    async getAll(): Promise<ResponseData<I_Teacher>> {
+    async getNumberTeachers(): Promise<ResponseData<number>> {
+        try {
+            const numberTeachers = await this.teacherModel.countDocuments()
+            if (numberTeachers)
+                return new ResponseData(HttpStatus.OK, undefined, numberTeachers)
+        } catch (error) {
+            console.log(error);
+            throw new HttpException(`Cannot get teacher!`, HttpStatus.CONFLICT)
+        }
+
+    }
+
+    async pagination(page: number, limit: number, object: string): Promise<ResponseData<I_Teacher>> {
         try {
             const teachers = await this.teacherModel.aggregate([
                 {
@@ -32,16 +44,21 @@ export class TeacherRepository {
                         dateOfBirth: 1,
                         exp: 1,
                         email: 1,
-                        major: '$majorInfo.name'
+                        major: {
+                            _id: "$majorInfo._id",
+                            name: "$majorInfo.name",
+                        }
                     }
-                }
+                },
+                { $skip: (page - 1) * limit },
+                { $limit: Number(limit) }
             ])
             if (teachers)
                 return new ResponseData(HttpStatus.OK, undefined, teachers)
         } catch (error) {
             console.log(error);
-            throw new HttpException(`Cannot get teacher!`, HttpStatus.CONFLICT)
-        }
 
+            throw new HttpException(`Cannot get ${object}!`, HttpStatus.CONFLICT)
+        }
     }
 }

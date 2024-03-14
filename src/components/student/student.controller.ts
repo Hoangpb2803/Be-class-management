@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { StudentDto } from 'src/dtos/student.dto';
 import { StudentService } from './student.service';
 import { ResponseData } from 'src/constants/response-data';
@@ -12,8 +12,15 @@ export class StudentController {
     ) { }
 
     @Get()
-    async getAllStudents(): Promise<ResponseData<I_Student>> {
+    async getAllStudents(): Promise<ResponseData<number>> {
         return this.studentService.getAllStudents()
+    }
+
+    @Get("pagination")
+    async getStudentsPagination(
+        @Query('page') page: number = 1,
+    ): Promise<ResponseData<I_Student>> {
+        return this.studentService.getPagination(page)
     }
 
     @Get(":id")
@@ -33,7 +40,8 @@ export class StudentController {
     }
 
     @Delete(":id")
-    async deleteStudent(@Param('id') _id: string): Promise<ResponseData<I_Student>> {
-        return this.studentService.deleteStudent(_id)
+    async deleteStudent(@Param('id') _id: string,
+        @Query('page') page: number = 1): Promise<ResponseData<I_Student>> {
+        return this.studentService.deleteStudent(_id, page)
     }
 }

@@ -23,10 +23,14 @@ export class TeacherService {
     ) { }
 
     private readonly baseRepo = new BaseRepository<I_Teacher>(this.teacherModel)
-    private readonly object = "student"
+    private readonly object = "teacher"
 
-    async getAllTeachers(): Promise<ResponseData<I_Teacher>> {
-        return await this.teacherRepo.getAll()
+    async getAllTeachers(): Promise<ResponseData<number>> {
+        return await this.teacherRepo.getNumberTeachers()
+    }
+
+    async getPagination(page: number, limit: number): Promise<ResponseData<I_Teacher>> {
+        return await this.teacherRepo.pagination(page, limit, this.object)
     }
 
     async getTeacherDetail(_id: string): Promise<ResponseData<I_Teacher>> {

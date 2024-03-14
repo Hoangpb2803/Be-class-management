@@ -25,9 +25,12 @@ export class StudentService {
     private readonly baseRepo = new BaseRepository<I_Student>(this.studentModel)
     private readonly object = "student"
 
-    async getAllStudents(): Promise<ResponseData<I_Student>> {
-        return await this.studentRepo.getAll()
-        // return await this.baseRepo.findAll(this.object)
+    async getAllStudents(): Promise<ResponseData<number>> {
+        return await this.studentRepo.getNumberStudents()
+    }
+
+    async getPagination(page: number): Promise<ResponseData<I_Student>> {
+        return await this.studentRepo.pagination(page, this.object)
     }
 
     async getStudentDetail(_id: string): Promise<ResponseData<I_Student>> {
@@ -58,7 +61,7 @@ export class StudentService {
             throw checkExist.notice
         try {
             const hashPassword = await this.userRepo.hashPassword("123456")
-            const newStudent = await this.studentModel.create({ ...data, password: hashPassword, role })
+            const newStudent = await this.studentRepo.createStudent({ ...data, password: hashPassword, role })
             const newUser = await this.userRepo.createNewUser(newStudent._id, hashPassword, role, user)
             if (newStudent && newUser)
                 return new ResponseData(HttpStatus.OK, E_Message.CREATE_SUCCESS, newStudent)
@@ -73,7 +76,7 @@ export class StudentService {
         const checkExist = this.baseRepo.findOne(_id)
         if (checkExist) {
             try {
-                const updateStudent = await this.studentModel.findByIdAndUpdate(_id, data, { new: true })
+                const updateStudent = await this.studentRepo.updateStudent(_id, data)
                 const newUser = await this.userRepo.updateNewUser(user, _id)
                 if (updateStudent && newUser) {
                     return new ResponseData(HttpStatus.OK, E_Message.UPDATE_SUCCESS, updateStudent)
@@ -84,7 +87,10 @@ export class StudentService {
         }
     }
 
-    async deleteStudent(_id: string): Promise<ResponseData<I_Student>> {
-        return await this.baseRepo.delete(_id, this.object)
+    async deleteStudent(_id: string, page: number): Promise<ResponseData<I_Student>> {
+        const deleteStatus = await this.baseRepo.delete(_id, this.object)
+        if (deleteStatus.statusCode === 200) {
+            return await this.studentRepo.pagination(page, this.object)
+        }
     }
 }
